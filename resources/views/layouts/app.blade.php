@@ -20,7 +20,6 @@
 
         <!-- Custom JS -->
         <script src="{{ asset('js/language.js') }}" defer></script>
-        <script src="{{ asset('js/modal.js') }}" defer></script>
         <script src="{{ asset('js/script.js') }}" defer></script>
         <script>
             window.portfolioTranslations = @json(config('translations'));
@@ -39,6 +38,7 @@
                                 <li><a class="nav-link @if (request()->routeIs('about')) active @endif" href="{{ route('about') }}">About</a></li>
                                 <li><a class="nav-link @if (request()->routeIs('projects')) active @endif" href="{{ route('projects') }}">Projecten</a></li>
                                 <li><a class="nav-link @if (request()->routeIs('dev-life')) active @endif" href="{{ route('dev-life') }}">Dev Life</a></li>
+                                <li><a class="nav-link @if (request()->routeIs('games')) active @endif" href="{{ route('games') }}">Games</a></li>
                                 <li><a class="nav-link @if (request()->routeIs('contact')) active @endif" href="{{ route('contact') }}">Contact</a></li>
                                 <li>
                                     <button id="lang-toggle" class="lang-toggle nav-link" aria-label="Switch language"></button>
