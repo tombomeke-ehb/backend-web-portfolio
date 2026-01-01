@@ -57,3 +57,12 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+### Removed Tailwind, Vite, and Breeze Entrypoints and Configurations
+
+- Removed `resources/css/app.css` (Tailwind entrypoint)
+- Removed `resources/js/app.js` (Breeze/Vite entrypoint)
+- Removed `tailwind.config.js`, `postcss.config.js`, `vite.config.js`
+- Removed `public/build/` (Vite output)
