@@ -43,8 +43,10 @@
                                 <li>
                                     <button id="lang-toggle" class="lang-toggle nav-link" aria-label="Switch language"></button>
                                 </li>
-                                <li><a class="nav-link" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+                                <li>
+                                    <a class="nav-link" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                </li>
                             @endif
                         </ul>
                         @if (auth()->check())
