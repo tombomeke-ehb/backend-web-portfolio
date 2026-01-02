@@ -19,19 +19,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/projects', function () {
-        // Mock data zodat de pagina niet crasht
-        $projects = [
-            [
-                'id' => 1,
-                'title' => 'Voorbeeld Project',
-                'description' => 'Dit is een voorbeeldproject.',
-                'category' => 'web',
-                'image' => asset('images/projects/voorbeeld.png'),
-                'tech' => ['Laravel', 'PHP', 'MySQL'],
-            ],
-            // Voeg meer projecten toe indien gewenst
-        ];
-        return view('projects', compact('projects'));
+        $projectModel = new \App\Models\ProjectModel();
+        $projects = $projectModel->getAllProjects();
+
+        return view('projects', compact('projects', 'projectModel'));
     })->name('projects');
 
     Route::get('/dev-life', function () {
@@ -80,7 +71,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('about');
 
     Route::get('/games', function () {
-        return view('games');
+        // Games is currently a Work In Progress page
+        return view('wip', [
+            'pageLabel' => 'Games',
+        ]);
     })->name('games');
 
     Route::middleware('auth')->group(function () {
