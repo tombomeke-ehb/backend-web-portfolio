@@ -15,18 +15,27 @@
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+        @if (request()->routeIs('dev-life') || request()->routeIs('projects'))
+            <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
+        @endif
+
         <!-- FontAwesome voor iconen -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <!-- Custom JS -->
         <script src="{{ asset('js/language.js') }}" defer></script>
+
+        @if (request()->routeIs('dev-life') || request()->routeIs('projects'))
+            <script src="{{ asset('js/modal.js') }}" defer></script>
+        @endif
+
         <script src="{{ asset('js/script.js') }}" defer></script>
         <script>
             window.portfolioTranslations = @json(config('translations'));
         </script>
     </head>
     <body>
-        <div class="min-h-screen">
+        <div style="min-height: 100vh; display: flex; flex-direction: column;">
             @if (Request::route()->getName() !== 'home')
                 <nav class="navbar">
                     <div class="nav-container">
@@ -58,17 +67,8 @@
                 </nav>
             @endif
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
             <!-- Page Content -->
-            <main>
+            <main style="flex: 1;">
                 @yield('content')
             </main>
             <footer>
