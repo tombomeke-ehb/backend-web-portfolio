@@ -24,12 +24,12 @@
                 <a href="{{ route('about') }}" class="btn btn-primary" data-translate="wip_back_home">
                     <i class="fas fa-home"></i> {{ __('wip_back_home') }}
                 </a>
-                <a href="{{ route('projects.index') }}" class="btn btn-secondary" data-translate="wip_view_projects">
+                <a href="{{ route('projects') }}" class="btn btn-secondary" data-translate="wip_view_projects">
                     <i class="fas fa-folder-open"></i> {{ __('wip_view_projects') }}
                 </a>
             </div>
 
-            <a class="wip-contact" href="{{ route('contact.show') }}" data-translate="wip_contact">
+            <a class="wip-contact" href="{{ route('contact') }}" data-translate="wip_contact">
                 <i class="fas fa-comment-dots"></i>
                 {{ __('wip_contact') }}
             </a>
