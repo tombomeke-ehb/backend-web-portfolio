@@ -29,14 +29,14 @@
             @foreach($projects as $project)
                 <div class="project-card"
                      data-category="{{ $project['category'] }}"
-                     data-modal='@json($project)'>
+                     data-modal="{{ isset($projectModel) ? $projectModel->getModalData($project) : e(json_encode($project)) }}">
 
                     @if (!empty($project['image']))
                         <div class="project-image-wrapper">
                             <img src="{{ $project['image'] }}"
                                  alt="{{ $project['title'] }}"
                                  class="project-image"
-                                 onerror="this.src='public/images/placeholder.jpg'">
+                                 onerror="this.onerror=null; this.src='{{ asset('images/projects/p1.png') }}';">
                             <div class="project-overlay">
                                 <i class="fas fa-search-plus"></i>
                             </div>
