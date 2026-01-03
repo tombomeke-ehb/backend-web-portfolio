@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminContactReceivedMail;
+use App\Models\ContactMessage;
 use App\Models\GameStatsModel;
 use App\Models\ProjectModel;
 use App\Models\SkillModel;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PortfolioController extends Controller
@@ -22,6 +26,18 @@ class PortfolioController extends Controller
         $this->gameStatsModel = new GameStatsModel();
     }
 
+    private function getLang(Request $request): string
+    {
+        // 1) Prefer localStorage-driven language (sent by the browser in a cookie, but
+        // some setups can have an out-of-sync cookie). We accept an explicit query
+        // param too for debugging.
+        $lang = (string) ($request->query('lang')
+            ?? $request->cookie('portfolio_lang')
+            ?? 'nl');
+
+        return in_array($lang, ['nl', 'en'], true) ? $lang : 'nl';
+    }
+
     public function about()
     {
         $data = [
@@ -30,21 +46,23 @@ class PortfolioController extends Controller
             'email'    => 'tom1dekoning@gmail.com',
             'linkedin' => 'https://www.linkedin.com/in/tom-dekoning-567523352/',
             'github'   => 'https://github.com/tombomeke',
+            'useTranslations' => true,
         ];
 
         return view('about', $data);
     }
 
-    public function devLife()
+    public function devLife(Request $request)
     {
+        $lang = $this->getLang($request);
         $skills = $this->skillModel->getAllSkills();
 
         return view('dev-life', [
-            'title'       => 'Developer Life',
-            'skills'      => $skills,
-            'skillModel'  => $this->skillModel,
-            'education'   => $this->skillModel->getEducation('nl'),
-            'learning_goals' => $this->skillModel->getLearningGoals('nl'),
+            'title'          => 'Developer Life',
+            'skills'         => $skills,
+            'skillModel'     => $this->skillModel,
+            'education'      => $this->skillModel->getEducation($lang),
+            'learning_goals' => $this->skillModel->getLearningGoals($lang),
         ]);
     }
 
@@ -60,12 +78,62 @@ class PortfolioController extends Controller
         ]);
     }
 
-    public function projects()
+    public function projects(Request $request)
     {
+        $lang = $this->getLang($request);
+
+        if (!Schema::hasTable('projects')) {
+            // Fallback to the old in-code project list so the page never 500s
+            $projects = (new ProjectModel())->getAllProjects($lang);
+
+            return view('projects', [
+                'title' => $lang === 'en' ? 'Projects' : 'Projecten',
+                'projects' => $projects,
+            ]);
+        }
+
+        $projects = Project::query()
+            ->with('translations')
+            ->orderBy('sort_order')
+            ->orderByDesc('id')
+            ->get()
+            ->map(function (Project $project) use ($lang) {
+                $tNl = $project->translations->firstWhere('lang', 'nl');
+                $tEn = $project->translations->firstWhere('lang', 'en');
+
+                return [
+                    'id' => $project->id,
+                    // Provide both languages so the client can swap without depending on hard reload
+                    'title' => [
+                        'nl' => $tNl?->title ?? $project->title,
+                        'en' => $tEn?->title ?? $project->title,
+                    ],
+                    'description' => [
+                        'nl' => $tNl?->description ?? $project->description,
+                        'en' => $tEn?->description ?? $project->description,
+                    ],
+                    'long_description' => [
+                        'nl' => $tNl?->long_description ?? $project->long_description,
+                        'en' => $tEn?->long_description ?? $project->long_description,
+                    ],
+                    'tech' => $project->tech ?? [],
+                    'repo_url' => $project->repo_url,
+                    'demo_url' => $project->demo_url,
+                    'image' => $project->image_path ? asset('storage/' . ltrim($project->image_path, '/')) : null,
+                    'category' => $project->category,
+                    'status' => $project->status,
+                    'features' => [
+                        'nl' => $tNl?->features ?? [],
+                        'en' => $tEn?->features ?? [],
+                    ],
+                ];
+            })
+            ->values()
+            ->all();
+
         return view('projects', [
-            'title'       => 'Projecten',
-            'projects'    => $this->projectModel->getAllProjects(),
-            'projectModel'=> $this->projectModel,
+            'title' => $lang === 'en' ? 'Projects' : 'Projecten',
+            'projects' => $projects,
         ]);
     }
 
@@ -81,20 +149,27 @@ class PortfolioController extends Controller
         $validated = $request->validate([
             'name'    => ['required', 'string', 'min:2'],
             'email'   => ['required', 'email'],
+            'subject' => ['nullable', 'string', 'max:150'],
             'message' => ['required', 'string', 'min:10'],
         ]);
 
-        // NOTE: configure mail in .env before this will actually send
-        Mail::raw(
-            "Naam: {$validated['name']}\nE-mail: {$validated['email']}\n\nBericht:\n{$validated['message']}",
-            function ($mail) use ($validated) {
-                $mail->to('jouw@email.com')
-                     ->subject('Portfolio Contact: '.$validated['name'])
-                     ->replyTo($validated['email']);
-            }
-        );
+        $messageModel = ContactMessage::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'] ?? null,
+            'message' => $validated['message'],
+            'ip_address' => $request->ip(),
+            'user_agent' => (string) $request->userAgent(),
+        ]);
 
-        return redirect()->route('contact.show')->with('success', 'Bericht succesvol verzonden! Ik neem zo snel mogelijk contact met je op.');
+        // Send to admin inbox address (configurable)
+        $adminEmail = config('mail.admin_address')
+            ?? config('mail.from.address')
+            ?? 'admin@ehb.be';
+
+        Mail::to($adminEmail)->send(new AdminContactReceivedMail($messageModel));
+
+        return redirect()->route('contact')->with('success', 'Bericht succesvol verzonden! Ik neem zo snel mogelijk contact met je op.');
     }
 
     public function downloadCv(): StreamedResponse
