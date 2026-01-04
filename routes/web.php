@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\TagManagementController;
 use App\Http\Controllers\Admin\NewsCommentManagementController;
 use App\Http\Controllers\Admin\ProjectManagementController;
 use App\Http\Controllers\Admin\ProjectMigrationHealthController;
+use App\Http\Controllers\Admin\SiteSettingsDiagnosticsController;
+use App\Http\Controllers\UserSkillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -42,10 +44,15 @@ Route::get('/news/{newsItem}', [NewsController::class, 'show'])->name('news.show
 // Public FAQ page (visible for guests)
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
+// Public contact page (required: visitors can submit)
+Route::get('/contact', [PortfolioController::class, 'contactShow'])->name('contact');
+Route::post('/contact', [PortfolioController::class, 'contactSubmit'])->name('contact.submit');
+
 // All portfolio pages except home locked behind auth + verified
 Route::middleware(['auth', 'verified'])->group(function () {
     // Settings (separate from Profile)
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     // Portfolio pages via controller
     Route::get('/about', [PortfolioController::class, 'about'])->name('about');
@@ -55,8 +62,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Games currently shows WIP
     Route::get('/games', [PortfolioController::class, 'wip'])->defaults('page', 'games')->name('games');
 
-    Route::get('/contact', [PortfolioController::class, 'contactShow'])->name('contact');
-    Route::post('/contact', [PortfolioController::class, 'contactSubmit'])->name('contact.submit');
     Route::get('/cv-download', [PortfolioController::class, 'downloadCv'])->name('cv.download');
 
     // Profile edit/update/destroy
@@ -67,6 +72,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Comments on news: authenticated users can post
     Route::post('/news/{newsItem}/comments', [NewsCommentController::class, 'store'])
         ->name('news.comments.store');
+
+    // User skills (stored in DB, shown on public profile)
+    Route::post('/settings/skills', [UserSkillController::class, 'store'])->name('settings.skills.store');
+    Route::put('/settings/skills/{skill}', [UserSkillController::class, 'update'])->name('settings.skills.update');
+    Route::delete('/settings/skills/{skill}', [UserSkillController::class, 'destroy'])->name('settings.skills.destroy');
 
     // Admin-only user management
     Route::prefix('admin')
@@ -135,6 +145,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Admin: site settings
             Route::get('/settings', [SiteSettingsController::class, 'index'])->name('settings.index');
             Route::put('/settings', [SiteSettingsController::class, 'update'])->name('settings.update');
+            Route::get('/settings/diagnostics', SiteSettingsDiagnosticsController::class)->name('settings.diagnostics');
 
             // Admin projects management
             Route::get('/projects', [ProjectManagementController::class, 'index'])->name('projects.index');
