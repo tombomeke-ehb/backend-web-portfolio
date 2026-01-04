@@ -4,26 +4,93 @@ Laravel portfolio project for Backend Web.
 
 ## Requirements
 
-- PHP 8.3+ (project currently tested on PHP 8.4.x)
-- Composer
+- **PHP 8.3+** (project currently tested on PHP 8.4.x)
+- **Composer** (PHP package manager)
 - A database (MySQL/MariaDB/PostgreSQL/SQLite)
+
+### Installing PHP & Composer (if not installed)
+
+**Option A: Use Laravel Herd (recommended for Windows/Mac)**
+- Download from https://herd.laravel.com
+- Herd installs PHP + Composer automatically and adds them to PATH
+
+**Option B: Manual installation**
+- PHP: https://windows.php.net/download (Windows) or `brew install php` (Mac)
+- Composer: https://getcomposer.org/download/
+
+**Verify installation:**
+```bash
+php -v        # Should show PHP 8.3+
+composer -V   # Should show Composer version
+```
 
 ## Setup
 
-1. Clone the repository
-2. Install dependencies
-   - `composer install`
-3. Create your `.env`
-   - copy `.env.example` -> `.env`
-   - set `APP_KEY`:
-     - `php artisan key:generate`
-4. Configure database connection in `.env`
-5. Run migrations + seeders
-   - `php artisan migrate:fresh --seed`
-6. Storage symlink (for uploaded images)
-   - `php artisan storage:link`
-7. Start the server
-   - `php artisan serve`
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd backend-web-portfolio
+   ```
+
+2. **Install PHP dependencies** (creates the `vendor/` folder)
+   ```bash
+   composer install
+   ```
+   > ⚠️ This step is REQUIRED. Without it, nothing works!
+
+3. **Create your `.env` file**
+   ```bash
+   cp .env.example .env
+   ```
+   > Do NOT copy `.env` from another machine - paths may differ!
+
+4. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Configure database** in `.env` (see "Quick Start .env" below for copy-paste config)
+
+6. **Run migrations + seeders**
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+7. **Create storage symlink** (for uploaded images)
+   ```bash
+   php artisan storage:link
+   ```
+
+8. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+   Then open http://localhost:8000 in your browser.
+
+## Quick Start .env (for teachers/evaluators)
+
+After copying `.env.example` to `.env`, the default configuration uses **SQLite** which requires no database server. Just run:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan storage:link
+php artisan serve
+```
+
+If you prefer **MySQL**, edit your `.env` and change:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=portfolio
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+**Mail configuration:** The default `.env.example` uses `MAIL_MAILER=log` which writes emails to `storage/logs/laravel.log` instead of sending them. This is fine for testing password reset functionality - just check the log file for the reset link.
 
 ## Default admin (required by assignment)
 
@@ -84,8 +151,31 @@ If you use `QUEUE_CONNECTION=database`, run a worker:
 
 ## Troubleshooting
 
-- Images not showing after upload: run `php artisan storage:link`
-- Changed `.env` but app still uses old values: run `php artisan config:clear`
+### "composer is not recognized" / "php is not recognized"
+PHP and/or Composer are not installed or not in your PATH.
+- Install Laravel Herd (recommended): https://herd.laravel.com
+- Or install PHP + Composer manually (see Requirements section above)
+
+### "Failed to open stream: No such file or directory ... vendor/autoload.php"
+The `vendor/` folder is missing. This happens when:
+- You cloned the repo but didn't run `composer install`
+- You copied the project without the vendor folder
+
+**Solution:** Run `composer install` first (requires Composer to be installed).
+
+### Images not showing after upload
+Run: `php artisan storage:link`
+
+### Changed `.env` but app still uses old values
+Run: `php artisan config:clear`
+
+### Database connection errors
+- Check your `.env` database settings (DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+- For quick local testing, use SQLite (no server needed):
+  ```
+  DB_CONNECTION=sqlite
+  ```
+- Make sure you created `database/database.sqlite` if using SQLite
 
 ## Sources / references
 
