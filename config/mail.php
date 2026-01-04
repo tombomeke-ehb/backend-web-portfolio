@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin inbox (contact form)
+    |--------------------------------------------------------------------------
+    |
+    | Used as recipient for contact form notifications.
+    |
+    */
+
+    'admin_address' => env('MAIL_ADMIN_ADDRESS', 'admin@ehb.be'),
+
 ];
