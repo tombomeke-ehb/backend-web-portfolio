@@ -1,3 +1,9 @@
+/*
+ * Source attribution:
+ * - Original portfolio styling derived from https://tombomeke.com (author: Tom Dekoning).
+ * - This Laravel project contains modifications/additions for the Backend Web course.
+ */
+
 /* ===========================================
    LAYOUT STYLES - Navigation, header, footer
    =========================================== */
@@ -303,4 +309,259 @@ footer {
     list-style: none !important;
     padding-left: 0 !important;
     margin: 0 !important;
+}
+
+/* ===========================================
+   ACCOUNT DROPDOWN — Polished Design
+   =========================================== */
+
+.nav-account {
+    position: relative;
+    margin-left: 0.5rem;
+}
+
+.account-dropdown {
+    position: relative;
+}
+
+/* Remove native marker */
+.account-dropdown > summary {
+    list-style: none;
+}
+.account-dropdown > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Trigger button styling */
+.account-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-secondary, rgba(255,255,255,0.85));
+
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.28);
+    border-radius: 50px;
+
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.account-trigger:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(99, 102, 241, 0.16) 100%);
+    border-color: rgba(59, 130, 246, 0.5);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.account-dropdown[open] > .account-trigger {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.28) 0%, rgba(99, 102, 241, 0.22) 100%);
+    border-color: rgba(59, 130, 246, 0.6);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
+}
+
+.account-trigger .fa-user-circle {
+    font-size: 1.15rem;
+}
+
+.account-trigger .fa-chevron-down {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.account-dropdown[open] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.account-trigger:focus {
+    outline: none;
+}
+.account-trigger:focus-visible {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+}
+
+/* Dropdown menu panel */
+.account-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 14px);
+    min-width: 260px;
+    padding: 0.75rem;
+
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 18, 35, 0.99) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    z-index: 1200;
+    transform-origin: top right;
+    animation: accountDropIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes accountDropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Decorative arrow */
+.account-menu::before {
+    content: "";
+    position: absolute;
+    right: 20px;
+    top: -7px;
+    width: 14px;
+    height: 14px;
+    background: rgba(15, 23, 42, 0.98);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px 0 0 0;
+    transform: rotate(45deg);
+}
+
+/* User info header (optional) */
+.account-header {
+    padding: 0.75rem 0.75rem 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.account-header-name {
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.account-header-email {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+}
+
+/* Menu items */
+.account-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 0.75rem 1rem;
+    margin-bottom: 4px;
+    border-radius: 12px;
+
+    color: rgba(255, 255, 255, 0.88);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    transition: all 0.15s ease;
+}
+
+.account-item:last-child {
+    margin-bottom: 0;
+}
+
+.account-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.account-item:hover {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.08) 100%);
+    color: #fff;
+}
+
+.account-item:hover i {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.account-item:active {
+    transform: scale(0.98);
+}
+
+.account-item:focus {
+    outline: none;
+}
+.account-item:focus-visible {
+    box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Divider before logout */
+.account-menu form {
+    margin: 0.5rem 0 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Logout button — red accent */
+.account-logout {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.account-logout i {
+    color: rgba(239, 68, 68, 0.8);
+}
+
+.account-logout:hover {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.18) 0%, rgba(220, 38, 38, 0.08) 100%);
+    color: #fff;
+}
+
+.account-logout:hover i {
+    color: rgba(248, 113, 113, 1);
+}
+
+/* Mobile: full-width dropdown */
+@media (max-width: 768px) {
+    .nav-account {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0.75rem;
+    }
+
+    .account-trigger {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+    }
+
+    .account-menu {
+        position: static;
+        width: 100%;
+        min-width: unset;
+        margin-top: 0.75rem;
+        border-radius: 12px;
+        animation: none;
+    }
+
+    .account-menu::before {
+        display: none;
+    }
 }
