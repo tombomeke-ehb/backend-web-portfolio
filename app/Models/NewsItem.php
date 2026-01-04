@@ -12,15 +12,18 @@ class NewsItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
         'image_path',
-        'content',
         'published_at',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function translations(): HasMany
+    {
+        return $this->hasMany(NewsItemTranslation::class);
+    }
 
     public function tags(): BelongsToMany
     {
@@ -30,5 +33,31 @@ class NewsItem extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(NewsComment::class);
+    }
+
+    public function getTitleAttribute(): string
+    {
+        return $this->getTranslationValue('title');
+    }
+
+    public function getContentAttribute(): string
+    {
+        return $this->getTranslationValue('content');
+    }
+
+    private function getTranslationValue(string $field): string
+    {
+        $lang = request()?->cookie('portfolio_lang', 'nl') ?? 'nl';
+        $lang = in_array($lang, ['nl', 'en'], true) ? $lang : 'nl';
+
+        $translations = $this->relationLoaded('translations')
+            ? $this->translations
+            : $this->translations()->get();
+
+        $match = $translations->firstWhere('lang', $lang)
+            ?: $translations->firstWhere('lang', 'nl')
+            ?: $translations->first();
+
+        return (string) ($match?->{$field} ?? '');
     }
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 class ProjectModel
 {
-    public function getAllProjects(): array
+    public function getAllProjects(string $lang = 'nl'): array
     {
-        $lang = 'nl'; // later we can hook this into Laravel localization
+        $lang = in_array($lang, ['nl', 'en'], true) ? $lang : 'nl';
 
         $projectsData = [
             [

@@ -19,8 +19,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
+        'birthday',
+        'about',
+        'preferred_language',
+        'profile_photo_path',
+        'is_admin',
         'password',
+        'public_profile',
+        'email_notifications',
+        'timezone',
     ];
 
     /**
@@ -42,7 +51,16 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'birthday' => 'date',
+            'is_admin' => 'boolean',
             'password' => 'hashed',
+            'public_profile' => 'boolean',
+            'email_notifications' => 'boolean',
         ];
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(\App\Models\UserSkill::class);
     }
 }
