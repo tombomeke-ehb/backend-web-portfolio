@@ -22,9 +22,7 @@
         <script src="{{ asset('js/language.js') }}" defer></script>
         <script src="{{ asset('js/script.js') }}" defer></script>
 
-        <script>
-            {!! 'window.portfolioTranslations = ' . json_encode(config('translations')) . ';' !!}
-        </script>
+        <script id="portfolio-translations" type="application/json">{!! json_encode(config('translations'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
     </head>
     <body>
         <div class="auth-layout">
