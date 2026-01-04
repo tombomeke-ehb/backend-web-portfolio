@@ -11,8 +11,6 @@
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-primary">Log in</a>
                         <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
-                    @else
-                        <a href="{{ url('/dashboard') }}" class="btn">Dashboard</a>
                     @endguest
                 </div>
             </div>
