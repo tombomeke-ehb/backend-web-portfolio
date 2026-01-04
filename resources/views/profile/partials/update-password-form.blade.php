@@ -1,59 +1,43 @@
-<section>
-    <header>
-        <h2 class="profile-section-title">
-            {{ __('Update Password') }}
-        </h2>
-
-        <p class="profile-section-description">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
+<section class="card-section">
+    <header class="card-header">
+        <h2><i class="fas fa-lock"></i> {{ __('Update Password') }}</h2>
+        <p>{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}">
+    <form method="post" action="{{ route('password.update') }}" class="card-body">
         @csrf
         @method('put')
 
         <div class="form-group">
-            <label for="update_password_current_password" class="form-label">{{ __('Current Password') }}</label>
-            <input id="update_password_current_password" 
-                   name="current_password" 
-                   type="password" 
-                   class="form-input" 
-                   autocomplete="current-password">
+            <label for="update_password_current_password">{{ __('Current Password') }}</label>
+            <input id="update_password_current_password" name="current_password" type="password" autocomplete="current-password" placeholder="••••••••">
             @if ($errors->updatePassword->has('current_password'))
-                <div class="auth-error">{{ $errors->updatePassword->first('current_password') }}</div>
+                <span class="form-error">{{ $errors->updatePassword->first('current_password') }}</span>
             @endif
         </div>
 
-        <div class="form-group">
-            <label for="update_password_password" class="form-label">{{ __('New Password') }}</label>
-            <input id="update_password_password" 
-                   name="password" 
-                   type="password" 
-                   class="form-input" 
-                   autocomplete="new-password">
-            @if ($errors->updatePassword->has('password'))
-                <div class="auth-error">{{ $errors->updatePassword->first('password') }}</div>
-            @endif
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="update_password_password">{{ __('New Password') }}</label>
+                <input id="update_password_password" name="password" type="password" autocomplete="new-password" placeholder="••••••••">
+                @if ($errors->updatePassword->has('password'))
+                    <span class="form-error">{{ $errors->updatePassword->first('password') }}</span>
+                @endif
+            </div>
+
+            <div class="form-group">
+                <label for="update_password_password_confirmation">{{ __('Confirm Password') }}</label>
+                <input id="update_password_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" placeholder="••••••••">
+                @if ($errors->updatePassword->has('password_confirmation'))
+                    <span class="form-error">{{ $errors->updatePassword->first('password_confirmation') }}</span>
+                @endif
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="update_password_password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
-            <input id="update_password_password_confirmation" 
-                   name="password_confirmation" 
-                   type="password" 
-                   class="form-input" 
-                   autocomplete="new-password">
-            @if ($errors->updatePassword->has('password_confirmation'))
-                <div class="auth-error">{{ $errors->updatePassword->first('password_confirmation') }}</div>
-            @endif
-        </div>
-
-        <div class="profile-actions">
-            <button type="submit" class="auth-button">{{ __('Save') }}</button>
-
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-key"></i> {{ __('Update Password') }}</button>
             @if (session('status') === 'password-updated')
-                <p class="auth-status">{{ __('Saved.') }}</p>
+                <span class="form-success"><i class="fas fa-check"></i> {{ __('Password updated.') }}</span>
             @endif
         </div>
     </form>
