@@ -156,6 +156,20 @@ PHP and/or Composer are not installed or not in your PATH.
 - Install Laravel Herd (recommended): https://herd.laravel.com
 - Or install PHP + Composer manually (see Requirements section above)
 
+### "ext-fileinfo is missing" during composer install
+Your PHP installation is missing the `fileinfo` extension.
+
+**Solution A (recommended):** Enable the extension in php.ini:
+1. Open `C:\Program Files\php\php.ini` (or wherever your php.ini is located)
+2. Find the line `;extension=fileinfo`
+3. Remove the `;` to uncomment it: `extension=fileinfo`
+4. Save and retry `composer install`
+
+**Solution B (quick workaround):**
+```bash
+composer install --ignore-platform-req=ext-fileinfo
+```
+
 ### "Failed to open stream: No such file or directory ... vendor/autoload.php"
 The `vendor/` folder is missing. This happens when:
 - You cloned the repo but didn't run `composer install`
