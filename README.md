@@ -1,68 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend Web Portfolio (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel portfolio project for Backend Web.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3+ (project currently tested on PHP 8.4.x)
+- Composer
+- A database (MySQL/MariaDB/PostgreSQL/SQLite)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Setup
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone the repository
+2. Install dependencies
+   - `composer install`
+3. Create your `.env`
+   - copy `.env.example` -> `.env`
+   - set `APP_KEY`:
+     - `php artisan key:generate`
+4. Configure database connection in `.env`
+5. Run migrations + seeders
+   - `php artisan migrate:fresh --seed`
+6. Storage symlink (for uploaded images)
+   - `php artisan storage:link`
+7. Start the server
+   - `php artisan serve`
 
-## Learning Laravel
+## Default admin (required by assignment)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Username:** `admin`
+- **Email:** `admin@ehb.be`
+- **Password:** `Password!321`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+After seeding you can log in and access the admin panel.
 
-## Laravel Sponsors
+- Admin panel: `/admin`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Features
 
-### Premium Partners
+Minimum requirements:
+- Authentication (login/register/password reset)
+- Roles: user/admin and admin user management
+- Public profile pages: `/u/{username}`
+- News module (public list/detail + admin CRUD)
+- FAQ module (public + admin CRUD)
+- Contact form (public) + admin inbox
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Extra features:
+- Admin replies to contact messages
+- News comments + admin moderation
+- Tags (many-to-many) for news items
+- Site settings (maintenance mode + feature toggles)
+- User skills shown on public profiles
 
-## Contributing
+## Notes for evaluation (migrate:fresh --seed)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The teacher can run:
+- `php artisan migrate:fresh --seed`
 
-## Code of Conduct
+All required tables are created via migrations.
+Seeders populate:
+- default admin user
+- sample news + FAQ
+- sample contact messages
+- sample comments
+- sample users with skills
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Mail / password reset testing
 
-## Security Vulnerabilities
+Password reset uses Laravel's standard flow (forgot-password → email link → reset).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+For local testing without sending real emails:
+- set `MAIL_MAILER=log`
+- submit a password reset request
+- check `storage/logs/laravel.log` for the reset email/link
+
+To send real emails, configure SMTP in `.env` (provider-specific).
+
+## Queue
+
+This project can run with `QUEUE_CONNECTION=sync` for simple local testing.
+If you use `QUEUE_CONNECTION=database`, run a worker:
+- `php artisan queue:work`
+
+## Troubleshooting
+
+- Images not showing after upload: run `php artisan storage:link`
+- Changed `.env` but app still uses old values: run `php artisan config:clear`
+
+## Sources / references
+
+- Original portfolio/codebase inspiration/source (original site):
+  - https://tombomeke.com
+  - Used as the starting point for the portfolio layout/content and initial structure.
+
+- Laravel documentation (auth, mail, validation, routing, middleware, Eloquent):
+  - https://laravel.com/docs
+
+- Laravel password reset:
+  - https://laravel.com/docs/passwords
+
+- MDN Web Docs (client-side form validation patterns, constraint validation API):
+  - https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation
+
+- Laravel Breeze (starter kit used as base for authentication scaffolding):
+  - https://github.com/laravel/breeze
+
+- This project was extended/modified with help from **GitHub Copilot** for refactors, UI polish, and validation helpers.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
----
-
-### Removed Tailwind, Vite, and Breeze Entrypoints and Configurations
-
-- Removed `resources/css/app.css` (Tailwind entrypoint)
-- Removed `resources/js/app.js` (Breeze/Vite entrypoint)
-- Removed `tailwind.config.js`, `postcss.config.js`, `vite.config.js`
-- Removed `public/build/` (Vite output)
+Educational project.
