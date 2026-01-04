@@ -1,3 +1,9 @@
+{{--
+  Source attribution:
+  - Original portfolio page derived from https://tombomeke.com (author: Tom Dekoning).
+  - Modified/adapted for this Laravel Backend Web course project.
+--}}
+
 @extends('layouts.app')
 
 @section('content')
@@ -26,7 +32,7 @@
                         <label for="name">
                             <i class="fas fa-user"></i> <span data-translate="contact_name"></span> *
                         </label>
-                        <input type="text" id="name" name="name" required placeholder="" value="{{ old('name') }}">
+                        <input type="text" id="name" name="name" required minlength="2" placeholder="" value="{{ old('name') }}">
                     </div>
                     <div class="form-group">
                         <label for="email">
@@ -35,10 +41,16 @@
                         <input type="email" id="email" name="email" required placeholder="" value="{{ old('email') }}">
                     </div>
                     <div class="form-group">
+                        <label for="subject">
+                            <i class="fas fa-tag"></i> {{ __('Subject') }}
+                        </label>
+                        <input type="text" id="subject" name="subject" maxlength="150" placeholder="" value="{{ old('subject') }}">
+                    </div>
+                    <div class="form-group">
                         <label for="message">
                             <i class="fas fa-comment"></i> <span data-translate="contact_message"></span> *
                         </label>
-                        <textarea id="message" name="message" rows="6" required placeholder="">{{ old('message') }}</textarea>
+                        <textarea id="message" name="message" rows="6" required minlength="10" placeholder="">{{ old('message') }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-large">
                         <i class="fas fa-paper-plane"></i> <span data-translate="contact_send"></span>
