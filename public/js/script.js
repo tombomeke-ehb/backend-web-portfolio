@@ -1,4 +1,10 @@
 // /public/js/script.js
+/**
+ * Source attribution:
+ * - Original portfolio front-end scripts derived from https://tombomeke.com (author: Tom Dekoning).
+ * - This Laravel project contains modifications/additions for the Backend Web course.
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Navigation Toggle
     const navToggle = document.querySelector('.nav-toggle');
@@ -42,10 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    // Debug: Check if elements are found
-    console.log('Tab buttons found:', tabBtns.length);
-    console.log('Tab contents found:', tabContents.length);
-
     tabBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const targetTab = this.getAttribute('data-tab');
@@ -69,9 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Only initialize if elements exist
     if (filterBtns.length > 0 && projectCards.length > 0) {
-        console.log('Filter buttons found:', filterBtns.length);
-        console.log('Project cards found:', projectCards.length);
-
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const filterValue = this.getAttribute('data-filter');
@@ -117,27 +116,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const skillProgressBars = document.querySelectorAll('.skill-progress .progress-bar');
 
     if (skillProgressBars.length > 0) {
-        console.log('Skill cards found:', skillCards.length);
-        console.log('Progress bars found:', skillProgressBars.length);
-
-        // Log all progress bars and their data-width attributes
-        skillProgressBars.forEach((bar, index) => {
-            const targetWidth = bar.getAttribute('data-width');
-            console.log(`Progress bar ${index + 1}: data-width = "${targetWidth}"`);
-        });
-
         function animateSkillBars() {
-            console.log('Starting skill bar animations...');
             skillProgressBars.forEach((bar, index) => {
                 const targetWidth = bar.getAttribute('data-width');
-                console.log(`Processing bar ${index + 1}: targetWidth = "${targetWidth}"`);
 
                 if (targetWidth) {
                     const skillCard = bar.closest('.skill-card');
                     if (skillCard) {
                         // Check if already animated
                         if (bar.classList.contains('animated')) {
-                            console.log(`Bar ${index + 1} already animated, skipping`);
                             return;
                         }
 
@@ -152,14 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Add animate class and set target width
                             skillCard.classList.add('animate');
                             bar.style.width = targetWidth;
-
-                            console.log(`Animated bar ${index + 1}: set width to ${targetWidth}`);
                         }, 300 + (index * 150)); // Increased initial delay and stagger
-                    } else {
-                        console.log(`Could not find skill card for bar ${index + 1}`);
                     }
-                } else {
-                    console.log(`No data-width found for bar ${index + 1}`);
                 }
             });
         }
@@ -168,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const skillsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    console.log('Skills section in view, starting animations');
                     // Add delay to ensure styles are fully applied
                     setTimeout(() => {
                         animateSkillBars();
@@ -184,13 +164,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const skillsSection = document.querySelector('.skills-section');
         if (skillsSection) {
-            console.log('Observing skills section');
             skillsObserver.observe(skillsSection);
-        } else {
-            console.log('Skills section not found');
         }
-    } else {
-        console.log('No progress bars found');
     }
 
     // Smooth Scrolling for Internal Links
@@ -208,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form Validation Enhancement
-    const contactForm = document.querySelector('form');
+    const contactForm = document.querySelector('form.contact-form');
     if (contactForm) {
         const inputs = contactForm.querySelectorAll('input, textarea');
 
@@ -301,6 +276,107 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return isValid;
+    }
+
+    // Helper: show inline error
+    function showFieldError(field, message) {
+        // Remove existing error message
+        const existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) existingError.remove();
+
+        field.classList.add('error');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorDiv.style.color = 'var(--error-color)';
+        errorDiv.style.fontSize = '0.8rem';
+        errorDiv.style.marginTop = '0.25rem';
+        field.parentNode.appendChild(errorDiv);
+    }
+
+    function clearFieldError(field) {
+        field.classList.remove('error');
+        const existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) existingError.remove();
+    }
+
+    // --- Profile edit form validation (new) ---
+    // Targets the profile form on /profile
+    const profileForm = document.querySelector('main form[action$="/profile"]');
+    if (profileForm) {
+        const username = profileForm.querySelector('input[name="username"]');
+        const email = profileForm.querySelector('input[name="email"]');
+        const avatar = profileForm.querySelector('input[name="profile_photo"]');
+
+        const usernameRegex = /^[a-zA-Z0-9._-]{3,30}$/;
+
+        const validateProfile = () => {
+            let ok = true;
+
+            if (username) {
+                const v = username.value.trim();
+                if (!v) {
+                    ok = false;
+                    showFieldError(username, 'Username is verplicht');
+                } else if (!usernameRegex.test(v)) {
+                    ok = false;
+                    showFieldError(username, 'Username: 3-30 tekens (letters/cijfers/._-)');
+                } else {
+                    clearFieldError(username);
+                }
+            }
+
+            if (email) {
+                const v = email.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!v) {
+                    ok = false;
+                    showFieldError(email, 'E-mail is verplicht');
+                } else if (!emailRegex.test(v)) {
+                    ok = false;
+                    showFieldError(email, 'Voer een geldig e-mailadres in');
+                } else {
+                    clearFieldError(email);
+                }
+            }
+
+            if (avatar && avatar.files && avatar.files.length) {
+                const file = avatar.files[0];
+                const maxBytes = 2 * 1024 * 1024; // 2MB default in UI hint
+                const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+
+                if (file.size > maxBytes) {
+                    ok = false;
+                    showFieldError(avatar, 'Profielfoto is te groot (max 2MB)');
+                } else if (!allowed.includes(file.type)) {
+                    ok = false;
+                    showFieldError(avatar, 'Ongeldig bestandstype (JPG, PNG, WEBP)');
+                } else {
+                    clearFieldError(avatar);
+                }
+            }
+
+            return ok;
+        };
+
+        // Live feedback
+        [username, email].forEach(field => {
+            if (!field) return;
+            field.addEventListener('blur', validateProfile);
+            field.addEventListener('input', () => clearFieldError(field));
+        });
+
+        if (avatar) {
+            avatar.addEventListener('change', validateProfile);
+        }
+
+        profileForm.addEventListener('submit', (e) => {
+            if (!validateProfile()) {
+                e.preventDefault();
+                const firstError = profileForm.querySelector('.error');
+                if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
     }
 
     // Intersection Observer for Animations
@@ -403,6 +479,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateScrollEffects() {
         const scrolled = window.pageYOffset;
         const navbar = document.querySelector('.navbar');
+        if (!navbar) {
+            ticking = false;
+            return;
+        }
 
         // Add/remove scrolled class for navbar styling
         if (scrolled > 100) {

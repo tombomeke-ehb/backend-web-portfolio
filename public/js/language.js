@@ -1,5 +1,11 @@
 // /public/js/language.js
 /**
+ * Source attribution:
+ * - Original portfolio codebase derived from https://tombomeke.com (author: Tom Dekoning).
+ * - This Laravel project contains modifications/additions for the Backend Web course.
+ */
+
+/**
  * ============================================
  * LANGUAGE SWITCHER
  * ============================================
@@ -9,7 +15,7 @@
 
 class LanguageSwitcher {
     constructor() {
-        this.currentLang = this.getStoredLanguage() || 'nl';
+        this.currentLang = this.getInitialLanguage();
         this.translations = {};
         this.init();
     }
@@ -26,15 +32,24 @@ class LanguageSwitcher {
 
         // Apply current language
         this.applyLanguage(this.currentLang);
-
-        console.log('Language Switcher initialized:', this.currentLang);
     }
 
     /**
      * Load translations from PHP (embedded in page)
      */
     loadTranslations() {
-        // Translations are embedded by PHP in layout.php
+        // Translations can be embedded as application/json for editor compatibility
+        const el = document.getElementById('portfolio-translations');
+        if (el?.textContent) {
+            try {
+                this.translations = JSON.parse(el.textContent);
+                return;
+            } catch {
+                // ignore and fall back
+            }
+        }
+
+        // Backward compatible fallback (older layout)
         if (window.portfolioTranslations) {
             this.translations = window.portfolioTranslations;
         }
@@ -48,12 +63,46 @@ class LanguageSwitcher {
     }
 
     /**
+     * Get initial language
+     */
+    getInitialLanguage() {
+        // 1) Backend-provided preference (logged in)
+        const userPref = document.documentElement?.dataset?.preferredLanguage;
+        if (userPref === 'nl' || userPref === 'en') return userPref;
+
+        // 2) URL param
+        try {
+            const url = new URL(window.location.href);
+            const langParam = url.searchParams.get('lang');
+            if (langParam === 'nl' || langParam === 'en') return langParam;
+        } catch {
+            // ignore
+        }
+
+        // 3) Cookie set by this app
+        try {
+            const match = document.cookie.match(/(?:^|; )portfolio_lang=([^;]+)/);
+            const cookieLang = match ? decodeURIComponent(match[1]) : null;
+            if (cookieLang === 'nl' || cookieLang === 'en') return cookieLang;
+        } catch {
+            // ignore
+        }
+
+        // 4) Local storage
+        const stored = this.getStoredLanguage();
+        if (stored === 'nl' || stored === 'en') return stored;
+
+        // 5) Default
+        return 'nl';
+    }
+
+    /**
      * Store language preference
      */
     storeLanguage(lang) {
         localStorage.setItem('portfolio_lang', lang);
-        // Also set cookie for PHP
-        document.cookie = `portfolio_lang=${lang}; path=/; max-age=${365*24*60*60}`;
+        // Also set cookie for PHP (explicit SameSite makes it more reliable)
+        document.cookie = `portfolio_lang=${lang}; path=/; max-age=${365*24*60*60}; SameSite=Lax`;
     }
 
     /**
@@ -93,8 +142,24 @@ class LanguageSwitcher {
         this.currentLang = lang;
         this.storeLanguage(lang);
 
-        // Reload page to apply PHP translations
-        window.location.reload();
+        // Update toggle button state
+        const toggleBtn = document.getElementById('lang-toggle');
+        if (toggleBtn) this.updateToggleButton(toggleBtn);
+
+        // Update UI immediately (navbar + all elements with data-translate)
+        this.applyLanguage(lang);
+
+        // Optional: keep URL param in sync without reloading
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.history.replaceState({}, '', url.toString());
+        } catch {
+            // ignore
+        }
+
+        // If other scripts listen to language, expose updated getters
+        window.getCurrentLang = () => this.getCurrentLanguage();
     }
 
     /**
@@ -135,6 +200,26 @@ class LanguageSwitcher {
 
         // Update document language attribute
         document.documentElement.lang = lang;
+
+        // Refresh project cards (title/description) if present
+        this.updateProjectCards(lang);
+    }
+
+    /**
+     * Update project cards (title/description) based on selected language
+     */
+    updateProjectCards(lang) {
+        document.querySelectorAll('.project-card').forEach(card => {
+            const titleEl = card.querySelector('.project-title');
+            const descEl = card.querySelector('.project-description');
+            if (!titleEl || !descEl) return;
+
+            const title = card.getAttribute(`data-title-${lang}`) || card.getAttribute('data-title-nl') || titleEl.textContent;
+            const desc = card.getAttribute(`data-description-${lang}`) || card.getAttribute('data-description-nl') || descEl.textContent;
+
+            titleEl.textContent = title;
+            descEl.textContent = desc;
+        });
     }
 
     /**

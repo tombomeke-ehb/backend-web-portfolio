@@ -1,5 +1,11 @@
 // /public/js/modal.js
 /**
+ * Source attribution:
+ * - Original portfolio codebase derived from https://tombomeke.com (author: Tom Dekoning).
+ * - This Laravel project contains modifications/additions for the Backend Web course.
+ */
+
+/**
  * ============================================
  * UNIVERSAL MODAL SYSTEM
  * ============================================
@@ -28,8 +34,8 @@ class ModalSystem {
      * Initialize modal system
      */
     init() {
-        // Create modal container if it doesn't exist
-        this.createModalContainer();
+        // IMPORTANT: Don't create/append the modal overlay on init.
+        // Create it lazily on first open so it doesn't appear in the DOM preloaded.
 
         // Load modal data from page
         this.loadModalData();
@@ -39,12 +45,10 @@ class ModalSystem {
 
         // Setup keyboard handlers
         this.setupKeyboardHandlers();
-
-        console.log('Modal System initialized');
     }
 
     /**
-     * Create modal container in DOM
+     * Create modal container in DOM (lazy)
      */
     createModalContainer() {
         if (document.getElementById('universal-modal')) return;
@@ -52,7 +56,7 @@ class ModalSystem {
         const modalHTML = `
             <div id="universal-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
                 <div class="modal-container">
-                    <button class="modal-close" aria-label="Close modal">
+                    <button class="modal-close" aria-label="Close modal" type="button">
                         <i class="fas fa-times"></i>
                     </button>
                     <div class="modal-content">
@@ -66,15 +70,19 @@ class ModalSystem {
 
         // Setup close button
         const closeBtn = document.querySelector('#universal-modal .modal-close');
-        closeBtn.addEventListener('click', () => this.closeModal());
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeModal());
+        }
 
         // Setup overlay click
         const overlay = document.getElementById('universal-modal');
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                this.closeModal();
-            }
-        });
+        if (overlay) {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    this.closeModal();
+                }
+            });
+        }
     }
 
     /**
@@ -215,14 +223,11 @@ class ModalSystem {
      * Open project modal
      */
     openProjectModal(data) {
-        // Always use translation keys for modal content
-        const id = data.id;
-        const t = (key) => this.t(key);
-        const lang = window.getCurrentLang ? window.getCurrentLang() : 'nl';
-        const title = t(`project_title_${id}`);
-        const description = t(`project_description_${id}`);
-        const longDescription = t(`project_long_description_${id}`);
-        const features = t(`project_features_${id}`);
+        // Support data objects that still contain { nl, en } values
+        const title = this.pickByLang(data.title);
+        const description = this.pickByLang(data.description);
+        const longDescription = this.pickByLang(data.long_description);
+        const features = this.pickArrayByLang(data.features);
 
         const content = `
             <div class="modal-header">
@@ -238,19 +243,19 @@ class ModalSystem {
 
             <div class="modal-body">
                 <div class="modal-section">
-                    <h3><i class="fas fa-align-left"></i> ${this.t('modal_project_features')}</h3>
+                    <h3><i class="fas fa-align-left"></i> Description</h3>
                     <p>${description}</p>
-                    ${longDescription && longDescription !== `[project_long_description_${id}]` ? `<p class="mt-2">${longDescription}</p>` : ''}
+                    ${longDescription ? `<p class="mt-2">${longDescription}</p>` : ''}
                 </div>
 
                 <div class="modal-section">
                     <h3><i class="fas fa-code"></i> ${this.t('modal_project_tech')}</h3>
                     <div class="tech-stack-modal">
-                        ${data.tech && Array.isArray(data.tech) ? data.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : ''}
+                        ${(data.tech || []).map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                     </div>
                 </div>
 
-                ${features && Array.isArray(features) && features.length ? `
+                ${features.length ? `
                 <div class="modal-section">
                     <h3><i class="fas fa-star"></i> ${this.t('modal_project_features')}</h3>
                     <ul class="modal-list">
@@ -385,8 +390,12 @@ class ModalSystem {
      * Show modal with content
      */
     showModal(content) {
+        // Lazily create modal overlay now (first use)
+        this.createModalContainer();
+
         const modal = document.getElementById('universal-modal');
-        const modalContent = modal.querySelector('.modal-content');
+        const modalContent = modal?.querySelector('.modal-content');
+        if (!modal || !modalContent) return;
 
         // Set content
         modalContent.innerHTML = content;
@@ -403,7 +412,7 @@ class ModalSystem {
 
         // Animate in
         requestAnimationFrame(() => {
-            modal.querySelector('.modal-container').classList.add('animate-in');
+            modal.querySelector('.modal-container')?.classList.add('animate-in');
         });
     }
 
@@ -490,6 +499,27 @@ class ModalSystem {
      */
     t(key) {
         return window.translate ? window.translate(key) : key;
+    }
+
+    getCurrentLang() {
+        try {
+            return (window.getCurrentLang && window.getCurrentLang()) || 'nl';
+        } catch {
+            return 'nl';
+        }
+    }
+
+    pickByLang(value) {
+        const lang = this.getCurrentLang();
+        if (value && typeof value === 'object' && (value.nl || value.en)) {
+            return value[lang] ?? value.nl ?? value.en;
+        }
+        return value;
+    }
+
+    pickArrayByLang(value) {
+        const picked = this.pickByLang(value);
+        return Array.isArray(picked) ? picked : (picked ? [picked] : []);
     }
 }
 
