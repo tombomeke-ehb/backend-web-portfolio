@@ -1,3 +1,9 @@
+{{--
+  Source attribution:
+  - Original portfolio page derived from https://tombomeke.com (author: Tom Dekoning).
+  - Modified/adapted for this Laravel Backend Web course project.
+--}}
+
 @extends('layouts.app')
 
 @section('content')
