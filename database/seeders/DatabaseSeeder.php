@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +16,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Required default admin
+        User::updateOrCreate(
+            ['email' => 'admin@ehb.be'],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'email' => 'admin@ehb.be',
+                'password' => Hash::make('Password!321'),
+                'is_admin' => true,
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Optional normal user for local testing
+        User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'username' => 'testuser',
+                'email' => 'test@example.com',
+                'password' => Hash::make('Password!321'),
+                'is_admin' => false,
+            ]
+        );
+
+        $this->call([
+            NewsItemSeeder::class,
+            FaqSeeder::class,
+            ProjectSeeder::class,
+            ExtraFeaturesSeeder::class,
+
+            // Site configuration (required for Admin > Site Settings to not be empty)
+            SiteSettingsSeeder::class,
         ]);
     }
 }
