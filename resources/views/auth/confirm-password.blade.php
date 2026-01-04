@@ -10,11 +10,11 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
-                <input id="password" 
-                       class="form-input" 
-                       type="password" 
-                       name="password" 
-                       required 
+                <input id="password"
+                       class="form-input"
+                       type="password"
+                       name="password"
+                       required
                        autocomplete="current-password">
                 @error('password')
                     <div class="auth-error">{{ $message }}</div>
