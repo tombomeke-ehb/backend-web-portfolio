@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Intentionally left blank.
+        // This project uses DB/JS-driven translations (see public/js/language.js).
     }
 }
