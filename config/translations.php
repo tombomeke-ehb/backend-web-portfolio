@@ -4,10 +4,17 @@ return [
     'nl' => [
         // Navigation
         'nav_about' => 'About',
+        'nav_dev_life' => 'Dev Life',
         'nav_devlife' => 'Dev Life',
         'nav_games' => 'Games',
         'nav_projects' => 'Projecten',
+        'nav_news' => 'Nieuws',
+        'nav_faq' => 'FAQ',
         'nav_contact' => 'Contact',
+        'nav_profile' => 'Profiel',
+        'nav_settings' => 'Instellingen',
+        'nav_admin' => 'Admin Paneel',
+        'nav_logout' => 'Uitloggen',
 
         // Hero Section
         'hero_greeting' => 'Hoi, ik ben',
@@ -203,10 +210,17 @@ return [
     'en' => [
         // Navigation
         'nav_about' => 'About',
+        'nav_dev_life' => 'Dev Life',
         'nav_devlife' => 'Dev Life',
         'nav_games' => 'Games',
         'nav_projects' => 'Projects',
+        'nav_news' => 'News',
+        'nav_faq' => 'FAQ',
         'nav_contact' => 'Contact',
+        'nav_profile' => 'Profile',
+        'nav_settings' => 'Settings',
+        'nav_admin' => 'Admin Panel',
+        'nav_logout' => 'Logout',
 
         // Hero Section
         'hero_greeting' => 'Hi, I\'m',
