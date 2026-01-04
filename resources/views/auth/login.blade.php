@@ -14,14 +14,14 @@
 
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email Address') }}</label>
-                <input id="email" 
-                       class="form-input" 
-                       type="email" 
-                       name="email" 
-                       value="{{ old('email') }}" 
+                <input id="email"
+                       class="form-input"
+                       type="email"
+                       name="email"
+                       value="{{ old('email') }}"
                        placeholder="your@email.com"
-                       required 
-                       autofocus 
+                       required
+                       autofocus
                        autocomplete="username">
                 @error('email')
                     <div class="auth-error">{{ $message }}</div>
@@ -30,12 +30,12 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
-                <input id="password" 
-                       class="form-input" 
-                       type="password" 
+                <input id="password"
+                       class="form-input"
+                       type="password"
                        name="password"
                        placeholder="••••••••"
-                       required 
+                       required
                        autocomplete="current-password">
                 @error('password')
                     <div class="auth-error">{{ $message }}</div>
@@ -43,9 +43,9 @@
             </div>
 
             <div class="form-checkbox-group">
-                <input id="remember_me" 
-                       type="checkbox" 
-                       class="form-checkbox" 
+                <input id="remember_me"
+                       type="checkbox"
+                       class="form-checkbox"
                        name="remember">
                 <label for="remember_me" class="form-checkbox-label">
                     {{ __('Keep me signed in') }}
