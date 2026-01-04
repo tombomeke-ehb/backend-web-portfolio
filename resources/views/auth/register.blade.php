@@ -8,14 +8,14 @@
 
             <div class="form-group">
                 <label for="name" class="form-label">{{ __('Full Name') }}</label>
-                <input id="name" 
-                       class="form-input" 
-                       type="text" 
-                       name="name" 
+                <input id="name"
+                       class="form-input"
+                       type="text"
+                       name="name"
                        value="{{ old('name') }}"
                        placeholder="John Doe"
-                       required 
-                       autofocus 
+                       required
+                       autofocus
                        autocomplete="name">
                 @error('name')
                     <div class="auth-error">{{ $message }}</div>
@@ -24,13 +24,13 @@
 
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email Address') }}</label>
-                <input id="email" 
-                       class="form-input" 
-                       type="email" 
-                       name="email" 
+                <input id="email"
+                       class="form-input"
+                       type="email"
+                       name="email"
                        value="{{ old('email') }}"
                        placeholder="your@email.com"
-                       required 
+                       required
                        autocomplete="username">
                 @error('email')
                     <div class="auth-error">{{ $message }}</div>
@@ -39,12 +39,12 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
-                <input id="password" 
-                       class="form-input" 
-                       type="password" 
+                <input id="password"
+                       class="form-input"
+                       type="password"
                        name="password"
                        placeholder="••••••••"
-                       required 
+                       required
                        autocomplete="new-password">
                 @error('password')
                     <div class="auth-error">{{ $message }}</div>
@@ -53,12 +53,12 @@
 
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
-                <input id="password_confirmation" 
-                       class="form-input" 
-                       type="password" 
+                <input id="password_confirmation"
+                       class="form-input"
+                       type="password"
                        name="password_confirmation"
                        placeholder="••••••••"
-                       required 
+                       required
                        autocomplete="new-password">
                 @error('password_confirmation')
                     <div class="auth-error">{{ $message }}</div>
