@@ -1,5 +1,11 @@
+{{--
+  Source attribution:
+  - Original portfolio layout derived from https://tombomeke.com (author: Tom Dekoning).
+  - Modified/adapted for this Laravel Backend Web course project.
+--}}
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-preferred-language="{{ auth()->check() ? (auth()->user()->preferred_language ?? '') : '' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,10 +41,7 @@
 
         <script src="{{ asset('js/script.js') }}" defer></script>
 
-        <script>
-            // Provide translations to public/js/language.js
-            window.portfolioTranslations = {!! json_encode(config('translations'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!};
-        </script>
+        <script id="portfolio-translations" type="application/json">{!! json_encode(config('translations'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
     </head>
     <body class="{{ request()->routeIs('profile.*') || request()->routeIs('settings') ? 'account-page' : '' }}">
         <div style="min-height: 100vh; display: flex; flex-direction: column;">
@@ -60,7 +63,7 @@
                                 <li><a class="nav-link @if (request()->routeIs('news.*')) active @endif" href="{{ route('news.index') }}" data-translate="nav_news">News</a></li>
                                 <li><a class="nav-link @if (request()->routeIs('faq.*')) active @endif" href="{{ route('faq.index') }}" data-translate="nav_faq">FAQ</a></li>
                                 <li><a class="nav-link @if (request()->routeIs('contact')) active @endif" href="{{ route('contact') }}" data-translate="nav_contact">Contact</a></li>
-                                
+
                                 <li>
                                     <button id="lang-toggle" class="lang-toggle nav-link" aria-label="Switch language"></button>
                                 </li>
