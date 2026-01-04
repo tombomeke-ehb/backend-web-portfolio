@@ -16,12 +16,12 @@
 
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email') }}</label>
-                <input id="email" 
-                       class="form-input" 
-                       type="email" 
-                       name="email" 
-                       value="{{ old('email') }}" 
-                       required 
+                <input id="email"
+                       class="form-input"
+                       type="email"
+                       name="email"
+                       value="{{ old('email') }}"
+                       required
                        autofocus>
                 @error('email')
                     <div class="auth-error">{{ $message }}</div>
