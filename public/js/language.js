@@ -142,24 +142,47 @@ class LanguageSwitcher {
         this.currentLang = lang;
         this.storeLanguage(lang);
 
-        // Update toggle button state
-        const toggleBtn = document.getElementById('lang-toggle');
-        if (toggleBtn) this.updateToggleButton(toggleBtn);
-
-        // Update UI immediately (navbar + all elements with data-translate)
-        this.applyLanguage(lang);
-
-        // Optional: keep URL param in sync without reloading
-        try {
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', lang);
-            window.history.replaceState({}, '', url.toString());
-        } catch {
-            // ignore
+        // For authenticated users: sync with backend preference, then reload
+        // For guests: just reload with the cookie set
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        
+        if (csrfToken) {
+            // Authenticated: sync with backend first, then reload
+            this.syncLanguageWithBackend(lang).then(() => {
+                window.location.reload();
+            });
+        } else {
+            // Guest: just reload (cookie is already set)
+            window.location.reload();
         }
+    }
 
-        // If other scripts listen to language, expose updated getters
-        window.getCurrentLang = () => this.getCurrentLanguage();
+    /**
+     * Sync language preference with backend (for logged-in users)
+     */
+    async syncLanguageWithBackend(lang) {
+        // Check if user is authenticated (check for CSRF token)
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (!csrfToken) return; // Not authenticated, skip backend sync
+
+        try {
+            const response = await fetch('/language/switch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ language: lang }),
+            });
+
+            if (!response.ok) {
+                console.warn('Failed to sync language with backend');
+            }
+        } catch (error) {
+            // Silently fail - language still works via cookie
+            console.warn('Language sync error:', error);
+        }
     }
 
     /**
