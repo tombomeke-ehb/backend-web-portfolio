@@ -174,14 +174,14 @@ class PortfolioController extends Controller
 
     public function downloadCv(): StreamedResponse
     {
-        $path = storage_path('app/public/CV_JouwNaam.pdf');
+        $path = public_path('cv/cv.pdf');
         if (!file_exists($path)) {
             abort(404);
         }
 
         return response()->streamDownload(function () use ($path) {
             readfile($path);
-        }, 'CV_JouwNaam.pdf', [
+        }, 'CV_Tom_Dekoning.pdf', [
             'Content-Type' => 'application/pdf',
         ]);
     }
