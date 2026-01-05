@@ -45,7 +45,7 @@ class ActivityLogController extends Controller
         $activityLog->delete();
 
         return redirect()->route('admin.activity-logs.index')
-            ->with('success', __('Activity log entry deleted.'));
+            ->with('success', __('messages.Activity log entry deleted.'));
     }
 
     public function clear(Request $request)
@@ -60,6 +60,6 @@ class ActivityLogController extends Controller
         ActivityLog::log('deleted', "Cleared {$deleted} activity logs older than {$days} days");
 
         return redirect()->route('admin.activity-logs.index')
-            ->with('success', __(':count activity log entries cleared.', ['count' => $deleted]));
+            ->with('success', __('messages.:count activity log entries cleared.', ['count' => $deleted]));
     }
 }
