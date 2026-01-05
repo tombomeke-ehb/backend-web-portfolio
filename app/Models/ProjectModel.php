@@ -56,7 +56,7 @@ class ProjectModel
                 ],
                 'tech' => ['PHP', 'JavaScript', 'CSS Grid', 'HTML5'],
                 'repo_url' => 'https://github.com/tombomeke/portfolio',
-                'demo_url' => 'https://tomdekoning.nl',
+                'demo_url' => 'https://tombomeke.com',
                 'image' => asset('images/projects/p2.png'),
                 'category' => 'web',
                 'status' => 'active',

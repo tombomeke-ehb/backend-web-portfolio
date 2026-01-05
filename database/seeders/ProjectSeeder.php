@@ -54,7 +54,7 @@ class ProjectSeeder extends Seeder
                 'category' => 'web',
                 'status' => 'active',
                 'repo_url' => 'https://github.com/tombomeke/portfolio',
-                'demo_url' => 'https://tomdekoning.nl',
+                'demo_url' => 'https://tombomeke.com',
                 'image_path' => null,
                 'tech' => ['PHP', 'JavaScript', 'CSS'],
                 'sort_order' => 1,
