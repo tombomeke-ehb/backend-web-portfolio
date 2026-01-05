@@ -77,9 +77,14 @@
                                         </summary>
 
                                         <div class="account-menu" role="menu">
+                                            <a class="account-item" href="{{ route('profiles.show', auth()->user()) }}">
+                                                <i class="fas fa-user"></i>
+                                                <span data-translate="nav_profile">Profile</span>
+                                            </a>
+
                                             <a class="account-item" href="{{ route('profile.edit') }}">
                                                 <i class="fas fa-id-badge"></i>
-                                                <span data-translate="nav_profile">Profile</span>
+                                                <span data-translate="nav_profile_settings">Profile Settings</span>
                                             </a>
 
                                             <a class="account-item" href="{{ route('settings') }}">
