@@ -69,7 +69,7 @@ composer -V   # Should show Composer version
 
 ## Quick Start .env (for teachers/evaluators)
 
-After copying `.env.example` to `.env`, the default configuration uses **SQLite** which requires no database server. Just run:
+After copying `.env.example` to `.env`, the default configuration uses **SQLite** which requires no database server. The SQLite database file is **created automatically** when you run migrations.
 
 ```bash
 cp .env.example .env
@@ -78,6 +78,8 @@ php artisan migrate:fresh --seed
 php artisan storage:link
 php artisan serve
 ```
+
+> ✅ No need to manually create `database.sqlite` - it's created automatically!
 
 If you prefer **MySQL**, edit your `.env` and change:
 
@@ -176,6 +178,21 @@ The `vendor/` folder is missing. This happens when:
 - You copied the project without the vendor folder
 
 **Solution:** Run `composer install` first (requires Composer to be installed).
+
+### "Database file at path ... database.sqlite does not exist"
+This should be auto-created, but if not:
+
+**Solution (PowerShell):**
+```powershell
+New-Item -Path database\database.sqlite -ItemType File
+```
+
+**Solution (Mac/Linux):**
+```bash
+touch database/database.sqlite
+```
+
+Then run `php artisan migrate:fresh --seed`.
 
 ### Images not showing after upload
 Run: `php artisan storage:link`

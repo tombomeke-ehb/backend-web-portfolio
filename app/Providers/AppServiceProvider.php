@@ -19,7 +19,35 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Intentionally left blank.
-        // This project uses DB/JS-driven translations (see public/js/language.js).
+        // Auto-create SQLite database file if using SQLite and file doesn't exist
+        $this->createSqliteDatabaseIfNeeded();
+    }
+
+    /**
+     * Create the SQLite database file if it doesn't exist.
+     */
+    protected function createSqliteDatabaseIfNeeded(): void
+    {
+        if (config('database.default') === 'sqlite') {
+            $database = config('database.connections.sqlite.database');
+            
+            // Skip if using :memory: database
+            if ($database === ':memory:') {
+                return;
+            }
+
+            // Create the database file if it doesn't exist
+            if ($database && !file_exists($database)) {
+                $directory = dirname($database);
+                
+                // Create directory if needed
+                if (!is_dir($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+                
+                // Create empty database file
+                touch($database);
+            }
+        }
     }
 }
