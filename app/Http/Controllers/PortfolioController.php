@@ -179,7 +179,7 @@ class PortfolioController extends Controller
 
         Mail::to($adminEmail)->send(new AdminContactReceivedMail($messageModel));
 
-        return redirect()->route('contact')->with('success', __('Message sent successfully! I will contact you as soon as possible.'));
+        return redirect()->route('contact')->with('success', __('validation.contact_success'));
     }
 
     public function downloadCv(): StreamedResponse
