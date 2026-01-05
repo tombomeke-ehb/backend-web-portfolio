@@ -53,7 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Settings (separate from Profile)
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
-    
+
     // Language switch endpoint (AJAX)
     Route::post('/language/switch', [SettingsController::class, 'switchLanguage'])->name('language.switch');
 

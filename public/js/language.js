@@ -145,7 +145,7 @@ class LanguageSwitcher {
         // For authenticated users: sync with backend preference, then reload
         // For guests: just reload with the cookie set
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        
+
         if (csrfToken) {
             // Authenticated: sync with backend first, then reload
             this.syncLanguageWithBackend(lang).then(() => {

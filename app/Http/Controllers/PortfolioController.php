@@ -146,12 +146,22 @@ class PortfolioController extends Controller
 
     public function contactSubmit(Request $request)
     {
-        $validated = $request->validate([
-            'name'    => ['required', 'string', 'min:2'],
-            'email'   => ['required', 'email'],
-            'subject' => ['nullable', 'string', 'max:150'],
-            'message' => ['required', 'string', 'min:10'],
-        ]);
+        $validated = $request->validate(
+            [
+                'name'    => ['required', 'string', 'min:2'],
+                'email'   => ['required', 'email'],
+                'subject' => ['nullable', 'string', 'max:150'],
+                'message' => ['required', 'string', 'min:10'],
+            ],
+            [
+                'name.required' => __('validation.required', ['attribute' => __('Name')]),
+                'name.min' => __('validation.min.string', ['attribute' => __('Name'), 'min' => 2]),
+                'email.required' => __('validation.required', ['attribute' => __('Email')]),
+                'email.email' => __('validation.email', ['attribute' => __('Email')]),
+                'message.required' => __('validation.required', ['attribute' => __('Message')]),
+                'message.min' => __('validation.min.string', ['attribute' => __('Message'), 'min' => 10]),
+            ]
+        );
 
         $messageModel = ContactMessage::create([
             'name' => $validated['name'],
@@ -169,7 +179,7 @@ class PortfolioController extends Controller
 
         Mail::to($adminEmail)->send(new AdminContactReceivedMail($messageModel));
 
-        return redirect()->route('contact')->with('success', 'Bericht succesvol verzonden! Ik neem zo snel mogelijk contact met je op.');
+        return redirect()->route('contact')->with('success', __('Message sent successfully! I will contact you as soon as possible.'));
     }
 
     public function downloadCv(): StreamedResponse
