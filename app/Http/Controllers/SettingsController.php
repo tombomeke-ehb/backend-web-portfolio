@@ -35,7 +35,7 @@ class SettingsController extends Controller
         app()->setLocale($data['preferred_language']);
         cookie()->queue('portfolio_lang', $data['preferred_language'], 525600); // 1 year
 
-        return redirect()->route('settings')->with('success', __('Settings saved.'));
+        return redirect()->route('settings')->with('success', __('messages.Settings saved.'));
     }
 
     /**
