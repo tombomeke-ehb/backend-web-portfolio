@@ -153,6 +153,27 @@ If you use `QUEUE_CONNECTION=database`, run a worker:
 
 ## Troubleshooting
 
+### ⚠️ Windows Users: Enable PHP Extensions First!
+
+If you installed PHP manually (not via Herd/XAMPP/WAMP), you likely need to enable extensions:
+
+1. **Find your php.ini:** Run `php --ini` in terminal
+2. **Open php.ini as Administrator**
+3. **Uncomment these lines** (remove the `;` at the start):
+   ```ini
+   extension=curl
+   extension=fileinfo
+   extension=mbstring
+   extension=openssl
+   extension=pdo_mysql
+   extension=pdo_sqlite
+   extension=sqlite3
+   ```
+4. **Save and close** the file
+5. **Verify:** Run `php -m` - you should see the extensions listed
+
+---
+
 ### "composer is not recognized" / "php is not recognized"
 PHP and/or Composer are not installed or not in your PATH.
 - Install Laravel Herd (recommended): https://herd.laravel.com
@@ -171,6 +192,57 @@ Your PHP installation is missing the `fileinfo` extension.
 ```bash
 composer install --ignore-platform-req=ext-fileinfo
 ```
+
+### "could not find driver" (SQLite)
+Your PHP installation is missing the SQLite database driver.
+
+**Step 1: Find your php.ini file**
+Run this in your terminal:
+```bash
+php --ini
+```
+Look for the line that says "Loaded Configuration File" - that's your php.ini path.
+
+**Step 2: Edit php.ini (as Administrator)**
+1. Open the php.ini file in a text editor **as Administrator**
+2. Search for `;extension=pdo_sqlite` (use Ctrl+F)
+3. Remove the `;` at the start to uncomment it
+4. Also uncomment `;extension=sqlite3`
+5. Save the file
+
+**Step 3: Verify it works**
+```bash
+php -m | findstr sqlite
+```
+You should see `pdo_sqlite` and `sqlite3` in the output.
+
+**Alternative: Use MySQL instead**
+If you already have MySQL/XAMPP/WAMP installed, edit `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=portfolio
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Then create the database in MySQL:
+```sql
+CREATE DATABASE portfolio;
+```
+
+**Recommended extensions for Laravel** (uncomment all of these in php.ini):
+```ini
+extension=curl
+extension=fileinfo
+extension=mbstring
+extension=openssl
+extension=pdo_mysql
+extension=pdo_sqlite
+extension=sqlite3
+```
+
+> 💡 **Tip:** Using Laravel Herd avoids all these issues - it comes pre-configured with all extensions.
 
 ### "Failed to open stream: No such file or directory ... vendor/autoload.php"
 The `vendor/` folder is missing. This happens when:
