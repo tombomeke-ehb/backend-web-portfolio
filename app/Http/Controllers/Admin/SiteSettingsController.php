@@ -44,6 +44,6 @@ class SiteSettingsController extends Controller
         SiteSetting::clearCache();
 
         return redirect()->route('admin.settings.index')
-            ->with('success', __('Settings updated successfully.'));
+            ->with('success', __('messages.Settings updated successfully.'));
     }
 }
