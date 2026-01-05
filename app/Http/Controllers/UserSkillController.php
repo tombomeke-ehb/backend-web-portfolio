@@ -26,7 +26,7 @@ class UserSkillController extends Controller
             'is_public' => $request->has('is_public'),
         ]);
 
-        return redirect()->route('settings')->with('success', __('Skill added.'));
+        return redirect()->route('settings')->with('success', __('messages.Skill added.'));
     }
 
     public function update(Request $request, UserSkill $skill): RedirectResponse
@@ -49,7 +49,7 @@ class UserSkillController extends Controller
             'is_public' => $request->has('is_public'),
         ]);
 
-        return redirect()->route('settings')->with('success', __('Skill updated.'));
+        return redirect()->route('settings')->with('success', __('messages.Skill updated.'));
     }
 
     public function destroy(Request $request, UserSkill $skill): RedirectResponse
@@ -58,6 +58,6 @@ class UserSkillController extends Controller
 
         $skill->delete();
 
-        return redirect()->route('settings')->with('success', __('Skill removed.'));
+        return redirect()->route('settings')->with('success', __('messages.Skill removed.'));
     }
 }
