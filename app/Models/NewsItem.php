@@ -47,7 +47,7 @@ class NewsItem extends Model
 
     private function getTranslationValue(string $field): string
     {
-        $lang = request()?->cookie('portfolio_lang', 'nl') ?? 'nl';
+        $lang = app()->getLocale();
         $lang = in_array($lang, ['nl', 'en'], true) ? $lang : 'nl';
 
         $translations = $this->relationLoaded('translations')
