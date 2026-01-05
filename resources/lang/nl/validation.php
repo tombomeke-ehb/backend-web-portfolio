@@ -158,4 +158,12 @@ return [
         'subject' => 'onderwerp',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Messages
+    |--------------------------------------------------------------------------
+    */
+
+    'contact_success' => 'Bericht succesvol verzonden! Ik neem zo snel mogelijk contact met je op.',
+
 ];
