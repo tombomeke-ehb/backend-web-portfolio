@@ -158,4 +158,12 @@ return [
         'subject' => 'subject',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Messages
+    |--------------------------------------------------------------------------
+    */
+
+    'contact_success' => 'Message sent successfully! I will contact you as soon as possible.',
+
 ];
