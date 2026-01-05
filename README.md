@@ -282,8 +282,9 @@ Run: `php artisan config:clear`
 
 ## Sources / references
 
-- Original portfolio/codebase inspiration/source (original site):
-  - https://tombomeke.com
+- Original portfolio/codebase inspiration/source:
+  - Website: https://tombomeke.com
+  - GitHub repository: https://github.com/tombomeke/Portfolio
   - Used as the starting point for the portfolio layout/content and initial structure.
 
 - Laravel documentation (auth, mail, validation, routing, middleware, Eloquent):
