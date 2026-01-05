@@ -35,8 +35,12 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Generate a unique username based on the name
+        $username = User::generateUsername($request->name);
+
         $user = User::create([
             'name' => $request->name,
+            'username' => $username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
