@@ -72,7 +72,7 @@ class User extends Authenticatable
     {
         // First attempt: sanitize name and use as base
         $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $name));
-        
+
         // If name is empty or too short after sanitization, use fallback
         if (strlen($baseUsername) < 3) {
             return self::generateFallbackUsername();

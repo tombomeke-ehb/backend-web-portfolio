@@ -9,7 +9,7 @@
             <div class="form-group">
                 <label for="name" class="form-label">{{ __('Full Name') }}</label>
                 <input id="name"
-                       class="form-input"
+                       class="form-input @error('name') error @enderror"
                        type="text"
                        name="name"
                        value="{{ old('name') }}"
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email Address') }}</label>
                 <input id="email"
-                       class="form-input"
+                       class="form-input @error('email') error @enderror"
                        type="email"
                        name="email"
                        value="{{ old('email') }}"
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
                 <input id="password"
-                       class="form-input"
+                       class="form-input @error('password') error @enderror"
                        type="password"
                        name="password"
                        placeholder="••••••••"
@@ -54,7 +54,7 @@
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
                 <input id="password_confirmation"
-                       class="form-input"
+                       class="form-input @error('password_confirmation') error @enderror"
                        type="password"
                        name="password_confirmation"
                        placeholder="••••••••"

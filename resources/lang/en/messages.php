@@ -3,7 +3,7 @@
 return [
     // Contact form
     'contact_success' => 'Message sent successfully! I will contact you as soon as possible.',
-    
+
     // Settings
     'Settings saved.' => 'Settings saved.',
     'Skill added.' => 'Skill added.',

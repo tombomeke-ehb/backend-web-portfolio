@@ -500,6 +500,16 @@ section:last-of-type {
     opacity: 0.6;
 }
 
+.form-input.error {
+    border-color: var(--error-color);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.form-input.error:focus {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
 /* Checkbox */
 .form-checkbox-group {
     display: flex;

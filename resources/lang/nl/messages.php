@@ -3,7 +3,7 @@
 return [
     // Contact form
     'contact_success' => 'Bericht succesvol verzonden! Ik neem zo snel mogelijk contact met je op.',
-    
+
     // Settings
     'Settings saved.' => 'Instellingen opgeslagen.',
     'Skill added.' => 'Vaardigheid toegevoegd.',
