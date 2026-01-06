@@ -121,6 +121,81 @@ Extra features:
 - Site settings (maintenance mode + feature toggles)
 - User skills shown on public profiles
 
+
+## Database Structure & Entity Relationships
+
+### Overzicht
+Deze applicatie gebruikt een relationele database met duidelijke relaties tussen de entiteiten. Hieronder vind je een overzicht van de belangrijkste tabellen en hun onderlinge relaties, zoals geïmplementeerd in de seeders en models.
+
+### Belangrijkste Relaties
+
+- **User ↔ UserSkill**: één gebruiker heeft meerdere skills (one-to-many), maar via de tabel `user_skill` kunnen ook extra velden per skill per user worden bijgehouden.
+- **User ↔ NewsComment**: één gebruiker kan meerdere comments plaatsen (one-to-many).
+- **NewsItem ↔ NewsComment**: één nieuwsitem kan meerdere comments hebben (one-to-many).
+- **NewsItem ↔ Tag**: many-to-many via de pivot-tabel `news_item_tag`.
+- **User ↔ Skill**: many-to-many via `user_skill` (met extra velden zoals niveau, categorie, etc.).
+- **FaqCategory ↔ FaqItem**: één categorie heeft meerdere FAQ-items (one-to-many).
+- **FaqCategory ↔ FaqCategoryTranslation**: één categorie heeft meerdere vertalingen (one-to-many).
+- **FaqItem ↔ FaqItemTranslation**: één FAQ-item heeft meerdere vertalingen (one-to-many).
+- **NewsItem ↔ NewsItemTranslation**: één nieuwsitem heeft meerdere vertalingen (one-to-many).
+- **Project ↔ ProjectTranslation**: één project heeft meerdere vertalingen (one-to-many).
+- **ContactMessage**: bevat info over contactformulieren, optioneel gelinkt aan een user (via e-mail).
+- **SiteSetting**: losse key-value settings voor de site.
+
+### ASCII ERD (vereenvoudigd)
+
+```text
+users
+  |  \__< user_skill >__ skills
+  |             |
+  |             |-- extra velden: level, category, notes, is_public
+  |
+  |--< news_comments >-- news_items
+  |
+  |--< contact_messages
+
+news_items
+  |__< news_item_tag >__ tags
+  |__< news_item_translations
+  |__< news_comments
+
+faq_categories
+  |__< faq_items >__< faq_item_translations
+  |__< faq_category_translations
+
+projects
+  |__< project_translations
+
+site_settings
+
+Legenda:
+- <tabel> betekent een relatie (one-to-many of many-to-many via een pivot)
+- __ betekent een directe relatie
+
+```
+
+### Tabeloverzicht
+| Tabel                  | Omschrijving                                 |
+|------------------------|-----------------------------------------------|
+| users                  | Gebruikersaccounts                            |
+| user_skill             | Koppeltabel: users ↔ skills + extra velden    |
+| skills                 | Lijst van skills                             |
+| news_items             | Nieuwsartikelen                              |
+| news_item_tag          | Koppeltabel: news_items ↔ tags                |
+| tags                   | Lijst van tags                               |
+| news_comments          | Reacties op nieuwsitems                      |
+| faq_categories         | FAQ-categorieën                              |
+| faq_category_translations| Vertalingen van FAQ-categorieën             |
+| faq_items              | FAQ-vragen/antwoorden                        |
+| faq_item_translations  | Vertalingen van FAQ-items                    |
+| news_item_translations | Vertalingen van nieuwsitems                  |
+| projects               | Projecten                                    |
+| project_translations   | Vertalingen van projecten                    |
+| contact_messages       | Contactformulier inzendingen                 |
+| site_settings          | Site-instellingen                            |
+
+> Zie de map `database/migrations/` voor de volledige tabellendefinities en alle foreign keys.
+
 ## Notes for evaluation (migrate:fresh --seed)
 
 The teacher can run:
