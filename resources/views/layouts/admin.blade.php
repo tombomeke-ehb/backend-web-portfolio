@@ -10,12 +10,12 @@
                 <div class="admin-maintenance-banner" role="status" aria-live="polite">
                     <div class="admin-maintenance-banner__inner">
                         <div class="admin-maintenance-banner__left">
-                            <strong>{{ __('Maintenance Mode is ON') }}</strong>
-                            <span class="admin-maintenance-banner__hint">{{ __('Visitors are seeing the maintenance page (503).') }}</span>
+                            <strong>{{ __('admin.Maintenance Mode is ON') }}</strong>
+                            <span class="admin-maintenance-banner__hint">{{ __('admin.Visitors are seeing the maintenance page (503).') }}</span>
                         </div>
                         <div class="admin-maintenance-banner__right">
                             <a class="btn btn-sm btn-outline" href="{{ route('admin.settings.index') }}">
-                                {{ __('Manage settings') }}
+                                {{ __('admin.Manage settings') }}
                             </a>
                         </div>
                     </div>
