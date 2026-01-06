@@ -500,14 +500,95 @@ section:last-of-type {
     opacity: 0.6;
 }
 
-.form-input.error {
-    border-color: var(--error-color);
-    background: rgba(239, 68, 68, 0.05);
+/* Password requirements box */
+.password-requirements {
+    display: none;
+    background: #23293a;
+    border: 1px solid #2a3550;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px 0 #0002;
+    padding: 18px 20px 14px 20px;
+    margin-top: 10px;
+    font-size: 1em;
+    color: #fff;
+    transition: box-shadow 0.2s;
 }
 
-.form-input.error:focus {
-    border-color: var(--error-color);
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+.password-requirements.show {
+    display: block;
+}
+
+.password-requirements .requirement {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.98em;
+}
+
+.password-requirements .requirement:last-child {
+    margin-bottom: 0;
+}
+
+.password-requirements .requirement .requirement-icon {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.password-requirements .requirement.met .requirement-icon::before {
+    content: "✓";
+    color: #2ecc40;
+}
+
+.password-requirements .requirement.unmet .requirement-icon::before {
+    content: "✕";
+    color: #ff4136;
+}
+
+.password-requirements .requirement.met .requirement-text {
+    color: #2ecc40;
+}
+
+.password-requirements .requirement.unmet .requirement-text {
+    color: #ff4136;
+}
+
+/* Password input feedback */
+#password.valid {
+    border-color: #2ecc40 !important;
+    box-shadow: 0 0 0 2px #2ecc4033;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#password.error {
+    border-color: #ff4136 !important;
+    box-shadow: 0 0 0 2px #ff413633;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Password match feedback */
+.password-match {
+    display: none;
+    font-size: 1em;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.password-match.show {
+    display: block;
+}
+
+.password-match.success {
+    color: #2ecc40;
+}
+
+.password-match.error {
+    color: #ff4136;
 }
 
 /* Checkbox */
