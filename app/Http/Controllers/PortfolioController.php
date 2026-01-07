@@ -139,13 +139,36 @@ class PortfolioController extends Controller
 
     public function contactShow()
     {
+        $adminEmail = \App\Models\SiteSetting::get('admin_email', config('mail.admin_address', 'admin@ehb.be'));
+        $contactEmail = \App\Models\SiteSetting::get('contact_email', $adminEmail);
+        $contactFormEnabled = \App\Models\SiteSetting::get('contact_form_enabled', true);
         return view('contact', [
             'title' => 'Contact',
+            'adminEmail' => $adminEmail,
+            'contactEmail' => $contactEmail,
+            'contactFormEnabled' => $contactFormEnabled,
         ]);
     }
 
     public function contactSubmit(Request $request)
     {
+
+        if (!\App\Models\SiteSetting::get('contact_form_enabled', true)) {
+            return redirect()->route('contact')->with('error', __('The contact form is currently disabled by the site administrator.'));
+        }
+
+        // Contact rate limiting
+        if (\App\Models\SiteSetting::get('contact_rate_limit_enabled', false)) {
+            $maxPerMinute = (int) \App\Models\SiteSetting::get('contact_rate_limit_per_minute', 5);
+            $ip = $request->ip();
+            $key = 'contact_form:' . $ip;
+            if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, $maxPerMinute)) {
+                $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
+                return redirect()->route('contact')->with('error', __('Too many contact requests. Please try again in :seconds seconds.', ['seconds' => $seconds]));
+            }
+            \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+        }
+
         $validated = $request->validate(
             [
                 'name'    => ['required', 'string', 'min:2'],
@@ -173,9 +196,8 @@ class PortfolioController extends Controller
         ]);
 
         // Send to admin inbox address (configurable)
-        $adminEmail = config('mail.admin_address')
-            ?? config('mail.from.address')
-            ?? 'admin@ehb.be';
+
+        $adminEmail = \App\Models\SiteSetting::get('admin_email', config('mail.admin_address', 'admin@ehb.be'));
 
         Mail::to($adminEmail)->send(new AdminContactReceivedMail($messageModel));
 
