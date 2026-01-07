@@ -2,6 +2,7 @@
 
 @section('admin-content')
 <div class="admin-content-page">
+    {{-- Debug bar verwijderd --}}
     <div class="page-header">
         <div class="page-header-content">
             <h1><i class="fas fa-cog"></i> {{ __('Site Settings') }}</h1>
@@ -30,7 +31,7 @@
                         @foreach($groupSettings as $setting)
                             <div class="setting-item">
                                 <div class="setting-info">
-                                    <label for="{{ $setting->key }}" class="setting-label">{{ $setting->label }}</label>
+                                    <label for="{{ $setting->group }}_{{ $setting->key }}" class="setting-label">{{ $setting->label }}</label>
                                     @if($setting->description)
                                         <p class="setting-description">{{ $setting->description }}</p>
                                     @endif
@@ -39,20 +40,20 @@
                                     @if($setting->type === 'boolean')
                                         <label class="toggle-switch">
                                             <input type="checkbox"
-                                                   id="{{ $setting->key }}"
+                                                   id="{{ $setting->group }}_{{ $setting->key }}"
                                                    name="{{ $setting->key }}"
                                                    value="1"
                                                    {{ $setting->typed_value ? 'checked' : '' }}>
                                             <span class="toggle-slider"></span>
                                         </label>
                                     @elseif($setting->type === 'text' || str_contains($setting->key, 'description'))
-                                        <textarea id="{{ $setting->key }}"
+                                        <textarea id="{{ $setting->group }}_{{ $setting->key }}"
                                                   name="{{ $setting->key }}"
                                                   rows="3"
                                                   placeholder="{{ $setting->label }}">{{ $setting->value }}</textarea>
                                     @else
                                         <input type="{{ $setting->type === 'integer' ? 'number' : 'text' }}"
-                                               id="{{ $setting->key }}"
+                                               id="{{ $setting->group }}_{{ $setting->key }}"
                                                name="{{ $setting->key }}"
                                                value="{{ $setting->value }}"
                                                placeholder="{{ $setting->label }}">
