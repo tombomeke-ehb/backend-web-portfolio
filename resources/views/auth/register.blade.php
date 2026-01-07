@@ -3,6 +3,9 @@
         <h2 class="auth-title">{{ __('Create Account') }}</h2>
         <p class="auth-subtitle">{{ __('Join us and start building amazing things') }}</p>
 
+        @if(session('error'))
+            <div class="auth-error mb-3">{{ session('error') }}</div>
+        @endif
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
