@@ -20,14 +20,6 @@ class SiteSettingsSeeder extends Seeder
                 'description' => 'The name of your website',
             ],
             [
-                'key' => 'site_tagline',
-                'value' => 'Developer Portfolio',
-                'type' => 'string',
-                'group' => 'general',
-                'label' => 'Site Tagline',
-                'description' => 'Short tagline shown in headers/metadata',
-            ],
-            [
                 'key' => 'site_description',
                 'value' => 'My personal portfolio website',
                 'type' => 'text',
@@ -162,14 +154,6 @@ class SiteSettingsSeeder extends Seeder
                 'group' => 'seo',
                 'label' => 'Meta Robots',
                 'description' => 'Robots directive (e.g. index,follow or noindex,nofollow)',
-            ],
-            [
-                'key' => 'meta_theme_color',
-                'value' => '#0ea5e9',
-                'type' => 'string',
-                'group' => 'seo',
-                'label' => 'Theme Color',
-                'description' => 'Browser UI theme color',
             ],
 
             // Branding
