@@ -17,6 +17,12 @@
                 <span>{{ session('success') }}</span>
             </div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
         @if($errors->any())
             <div class="alert alert-error">
                 <i class="fas fa-exclamation-circle"></i>
@@ -26,6 +32,7 @@
         <div class="contact-content">
             <div class="contact-form-wrapper">
                 <h2 data-translate="contact_send_message"></h2>
+                @if (!isset($contactFormEnabled) || $contactFormEnabled)
                 <form method="POST" action="{{ route('contact.submit') }}" class="contact-form">
                     @csrf
                     <div class="form-group">
@@ -56,6 +63,9 @@
                         <i class="fas fa-paper-plane"></i> <span data-translate="contact_send"></span>
                     </button>
                 </form>
+                @else
+                <div class="alert alert-info mb-0"><i class="fas fa-info-circle"></i> {{ __('The contact form is currently disabled by the site administrator.') }}</div>
+                @endif
             </div>
             <div class="contact-info-wrapper">
                 <h2 data-translate="contact_direct"></h2>

@@ -11,7 +11,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        @php
+            use App\Models\SiteSetting;
+            $siteName = SiteSetting::get('site_name', config('app.name', 'Laravel'));
+            $siteTagline = SiteSetting::get('site_tagline', '');
+            $primaryColor = SiteSetting::get('brand_primary_color', '#F54927');
+            $showCookieNotice = SiteSetting::get('show_cookie_notice', false);
+            $github = SiteSetting::get('social_github', null);
+            $linkedin = SiteSetting::get('social_linkedin', null);
+            $twitter = SiteSetting::get('social_twitter', null);
+            $instagram = SiteSetting::get('social_instagram', null);
+            $privacy = SiteSetting::get('privacy_policy_url', null);
+            $terms = SiteSetting::get('terms_url', null);
+        @endphp
+
+
+        <title>{{ $siteName }}</title>
 
         <!-- LAAD ALLEEN JE EIGEN CSS -->
         <link rel="stylesheet" href="{{ asset('css/base.css') }}">
@@ -19,7 +35,13 @@
         <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
         <link rel="stylesheet" href="{{ asset('css/pages.css') }}">
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <style>
+            :root {
+                --primary-brand-color: {{ $primaryColor }};
+            }
+        </style>
 
         @if (request()->routeIs('dev-life') || request()->routeIs('projects'))
             <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
@@ -52,7 +74,7 @@
                             @php
                                 $brandHref = auth()->check() ? route('about') : route('home');
                             @endphp
-                            <a href="{{ $brandHref }}">Portfolio</a>
+                            <a href="{{ $brandHref }}">{{ $siteName }}</a>
                         </div>
                         <ul class="nav-menu">
                             @if (auth()->check())
@@ -121,8 +143,77 @@
             </main>
             <footer>
                 <div class="container">
-                    <p>&copy; {{ date('Y') }} Tom Dekoning. All rights reserved.</p>
+                    <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ $siteTagline }}</p>
+                    <div class="footer-social">
+                        @if($twitter)
+                            <a href="{{ $twitter }}" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        @endif
+                        @if($github)
+                            <a href="{{ $github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        @endif
+                        @if($linkedin)
+                            <a href="{{ $linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        @endif
+                        @if($instagram)
+                            <a href="{{ $instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        @endif
+                    </div>
+                    <div class="footer-legal">
+                        @if($privacy)
+                            <a href="{{ $privacy }}" target="_blank" rel="noopener" aria-label="Privacy Policy" style="margin-right:1.5em;">Privacy Policy</a>
+                        @endif
+                        @if($terms)
+                            <a href="{{ $terms }}" target="_blank" rel="noopener" aria-label="Terms of Service">Terms of Service</a>
+                        @endif
+                    </div>
                 </div>
+                @if($showCookieNotice)
+                    <div class="cookie-notice" style="
+                        position: fixed;
+                        left: 50%;
+                        bottom: 2.5rem;
+                        transform: translateX(-50%);
+                        min-width: 320px;
+                        max-width: 90vw;
+                        background: rgba(30,41,59,0.98);
+                        color: #f8fafc;
+                        border-radius: 1rem;
+                        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
+                        padding: 1.25em 2em 1.25em 1.5em;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.5em;
+                        z-index: 9999;
+                        font-size: 1.05rem;
+                        border: 1.5px solid #334155;
+                        animation: cookiefadein 0.7s cubic-bezier(.4,0,.2,1);
+                    ">
+                        <span style="flex:1; text-align:left;">
+                            <i class="fas fa-cookie-bite" style="margin-right:.7em; color:#fbbf24;"></i>
+                            {{ SiteSetting::get('cookie_notice_text', 'Deze website gebruikt cookies.') }}
+                        </span>
+                        <button onclick="this.closest('.cookie-notice').style.display='none'" style="
+                            background: #06d6a0;
+                            color: #1e293b;
+                            border: none;
+                            border-radius: .5em;
+                            font-weight: 700;
+                            padding: .5em 1.2em;
+                            font-size: 1em;
+                            cursor: pointer;
+                            box-shadow: 0 2px 8px 0 rgba(6,214,160,0.12);
+                            transition: background 0.2s;
+                        " onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#06d6a0'">
+                            Oké
+                        </button>
+                    </div>
+                    <style>
+                        @keyframes cookiefadein {
+                            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+                            to { opacity: 1; transform: translateY(0) scale(1); }
+                        }
+                    </style>
+                @endif
             </footer>
         </div>
     </body>
