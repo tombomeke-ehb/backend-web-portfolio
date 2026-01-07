@@ -29,6 +29,10 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Blokkeer registratie als uitgeschakeld in settings
+        if (!\App\Models\SiteSetting::get('registration_enabled', true)) {
+            return redirect()->route('register')->with('error', __('Registration is currently disabled by the site administrator.'));
+        }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
