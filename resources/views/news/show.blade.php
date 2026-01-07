@@ -37,6 +37,7 @@
             </div>
         </div>
 
+        @if (!isset($commentsEnabled) || $commentsEnabled)
         <div class="account-card comments-section">
             <div class="card-header">
                 <h2><i class="fas fa-comments"></i> {{ __('Comments') }} @if(($newsItem->comments ?? collect())->count() > 0)<span class="comment-count">({{ $newsItem->comments->count() }})</span>@endif</h2>
@@ -44,7 +45,8 @@
             <div class="card-body">
                 @if (session('status') === 'comment-posted')
                     <div class="alert alert-success"><i class="fas fa-check"></i> {{ __('Comment posted.') }}</div>
-                @endif                @auth
+                @endif
+                @auth
                     <form method="POST" action="{{ route('news.comments.store', $newsItem) }}" class="comment-form">
                         @csrf
                         <div class="form-group form-group--full">
@@ -56,7 +58,6 @@
                             <i class="fas fa-paper-plane"></i> {{ __('Post Comment') }}
                         </button>
                     </form>
-
                     <hr class="section-divider">
                 @else
                     <div class="login-prompt">
@@ -66,7 +67,7 @@
                 @endauth
 
                 @php
-                    $approvedComments = $newsItem->comments ?? collect();
+                    $approvedComments = ($newsItem->comments ?? collect())->where('is_approved', true);
                 @endphp
 
                 @if ($approvedComments->isEmpty())
@@ -102,6 +103,16 @@
                 @endif
             </div>
         </div>
+        @else
+        <div class="account-card comments-section">
+            <div class="card-header">
+                <h2><i class="fas fa-comments"></i> {{ __('Comments') }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-0"><i class="fas fa-info-circle"></i> {{ __('Comments are currently disabled by the site administrator.') }}</div>
+            </div>
+        </div>
+        @endif
     </div>
 </section>
 @endsection
