@@ -1,4 +1,19 @@
+
 <?php
+// Registration route override for toggle
+Route::get('/register', function () {
+    if (!\App\Models\SiteSetting::get('registration_enabled', true)) {
+        return view('auth.registration-disabled');
+    }
+    return app(\App\Http\Controllers\Auth\RegisteredUserController::class)->create();
+})->name('register');
+
+Route::post('/register', function (\Illuminate\Http\Request $request) {
+    if (!\App\Models\SiteSetting::get('registration_enabled', true)) {
+        return redirect()->route('register')->with('error', __('Registration is currently disabled by the site administrator.'));
+    }
+    return app(\App\Http\Controllers\Auth\RegisteredUserController::class)->store($request);
+});
 
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\NewsManagementController;
@@ -33,9 +48,13 @@ Route::get('/', function () {
 })->name('home');
 
 // Public profile pages (visible for guests)
-Route::get('/u/{user:username}', [PublicProfileController::class, 'show'])
-    ->where('user', '[A-Za-z0-9_\-\.]+')
-    ->name('profiles.show');
+Route::get('/u/{user:username}', function ($username) {
+    if (!\App\Models\SiteSetting::get('public_profiles_enabled', true)) {
+        return view('profiles.disabled');
+    }
+    $user = \App\Models\User::where('username', $username)->firstOrFail();
+    return app(\App\Http\Controllers\PublicProfileController::class)->show($user);
+})->where('user', '[A-Za-z0-9_\-\.]+')->name('profiles.show');
 
 // Public news pages (visible for guests)
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
