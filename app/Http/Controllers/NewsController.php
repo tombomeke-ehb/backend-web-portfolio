@@ -33,6 +33,8 @@ class NewsController extends Controller
             'comments' => fn ($q) => $q->where('is_approved', true)->with('user')->orderByDesc('created_at'),
         ]);
 
-        return view('news.show', compact('newsItem'));
+        $commentsEnabled = \App\Models\SiteSetting::get('comments_enabled', true);
+
+        return view('news.show', compact('newsItem', 'commentsEnabled'));
     }
 }
